@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run tests
+        run: mocha test.js
+
+      - name: Check test results
+        uses: actions/github-script@v6
+        with:
+          script: |
+            if (process.exitCode !== 0) {
+              core.setFailed('Unit tests failed');
+            }
+
